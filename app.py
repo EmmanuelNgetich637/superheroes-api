@@ -41,7 +41,7 @@ def update_power(id):
         return jsonify({"error": "Power not found"}), 400
     try:
         data = request.get_json()
-        power.description = ['description']
+        power.description = ['description', power.description]
         db.session.commit()
         return jsonify(power.to_dict()), 200
     except Exception as e:
