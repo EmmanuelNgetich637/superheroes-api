@@ -5,8 +5,13 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///superheroes.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db.init_app(app)
 migrate = Migrate(app, db)
+
+@app.route('/')
+def home():
+    return jsonify({"message": "🦸 Superheroes API is running"}), 200
 
 @app.route('/heroes', methods=['GET'])
 def get_heroes():
@@ -25,7 +30,7 @@ def get_hero(id):
 @app.route('/powers', methods=['GET'])
 def get_powers():
     powers = Power.query.all()
-    return jsonify([p.to_dict() for p in powers]), 200
+    return jsonify([power.to_dict() for power in powers]), 200
 
 @app.route('/powers/<int:id>', methods=['GET'])
 def get_power(id):
@@ -41,13 +46,13 @@ def update_power(id):
         return jsonify({"error": "Power not found"}), 400
     try:
         data = request.get_json()
-        power.description = data.get('description', power.description)
-
+        print("Description from request:", data['description'])
+        power.description = data['description']
         db.session.commit()
         return jsonify(power.to_dict()), 200
     except Exception as e:
         return jsonify({"error": [str(e)]}), 400
-    
+
 @app.route('/hero_powers', methods=['POST'])
 def create_hero_power():
     data = request.get_json()
@@ -62,7 +67,3 @@ def create_hero_power():
         return jsonify(new_hp.to_dict()), 201
     except Exception as e:
         return jsonify({"errors": [str(e)]}), 400
-
-@app.route('/')
-def home():
-    return jsonify({"message": "🦸 Superheroes API is running"}), 200

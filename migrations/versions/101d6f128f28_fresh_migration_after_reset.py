@@ -1,8 +1,8 @@
-"""Initial migration after fix
+"""Fresh migration after reset
 
-Revision ID: 189df35dc878
+Revision ID: 101d6f128f28
 Revises: 
-Create Date: 2025-06-16 03:25:24.233359
+Create Date: 2025-06-19 06:38:32.179292
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '189df35dc878'
+revision = '101d6f128f28'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,10 +32,11 @@ def upgrade():
     )
     op.create_table('hero_powers',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('strength', sa.Integer(), nullable=True),
+    sa.Column('strength', sa.String(), nullable=True),
+    sa.Column('power_id', sa.Integer(), nullable=True),
     sa.Column('hero_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['hero_id'], ['heroes.id'], ),
-    sa.ForeignKeyConstraint(['strength'], ['powers.id'], ),
+    sa.ForeignKeyConstraint(['power_id'], ['powers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
