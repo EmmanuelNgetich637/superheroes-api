@@ -41,7 +41,8 @@ def update_power(id):
         return jsonify({"error": "Power not found"}), 400
     try:
         data = request.get_json()
-        power.description = ['description', power.description]
+        power.description = data.get('description', power.description)
+
         db.session.commit()
         return jsonify(power.to_dict()), 200
     except Exception as e:
@@ -61,3 +62,7 @@ def create_hero_power():
         return jsonify(new_hp.to_dict()), 201
     except Exception as e:
         return jsonify({"errors": [str(e)]}), 400
+
+@app.route('/')
+def home():
+    return jsonify({"message": "🦸 Superheroes API is running"}), 200
